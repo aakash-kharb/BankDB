@@ -83,8 +83,8 @@ bankdb_django_ui/
 
 ```bash
 # Clone the repository
-git clone <repo-url>
-cd bankdb_django_ui
+git clone https://github.com/aakash-kharb/BankDB/
+cd BankDB
 
 # Create and activate a virtual environment
 python3 -m venv venv
