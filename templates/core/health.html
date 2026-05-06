@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}Health Check — BankDB{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>
+    <span class="material-symbols-outlined">monitor_heart</span> Health Check
+  </h2>
+</div>
+
+<div class="row g-3">
+  <!-- Status Card -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        {% if ok %}
+        <div class="info-icon" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">
+          <span class="material-symbols-outlined icon-fill" style="color:#059669">check_circle</span>
+        </div>
+        <h5 style="color:#059669">System Healthy</h5>
+        {% else %}
+        <div class="info-icon" style="background:linear-gradient(135deg,#fee2e2,#fecaca)">
+          <span class="material-symbols-outlined icon-fill" style="color:#dc2626">error</span>
+        </div>
+        <h5 style="color:#dc2626">System Error</h5>
+        {% endif %}
+      </div>
+      <div class="info-body">
+        <p><strong>Database:</strong> {{ message }}</p>
+        <p class="mb-0"><strong>Status:</strong>
+          {% if ok %}
+            <span class="badge bg-success">Connected</span>
+          {% else %}
+            <span class="badge bg-danger">Disconnected</span>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Environment Info -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        <div class="info-icon"><span class="material-symbols-outlined">info</span></div>
+        <h5>Environment</h5>
+      </div>
+      <div class="info-body">
+        <table class="table table-sm mb-0" style="font-size:.88rem">
+          <tbody>
+            <tr><td class="fw-semibold" style="width:40%">Framework</td><td>Django 5.x</td></tr>
+            <tr><td class="fw-semibold">Database Engine</td><td>{{ db_engine }}</td></tr>
+            <tr><td class="fw-semibold">Database Name</td><td><code>{{ db_name }}</code></td></tr>
+            <tr><td class="fw-semibold">Debug Mode</td><td>{{ debug_mode }}</td></tr>
+            <tr><td class="fw-semibold">Time Zone</td><td>UTC</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Checks -->
+  <div class="col-lg-4 d-flex">
+    <div class="stat-card w-100">
+      <div class="stat-icon {% if ok %}credit{% else %}debit{% endif %}">
+        <span class="material-symbols-outlined">storage</span>
+      </div>
+      <div>
+        <div class="stat-value">{% if ok %}Online{% else %}Offline{% endif %}</div>
+        <div class="stat-label">Database</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 d-flex">
+    <div class="stat-card w-100">
+      <div class="stat-icon records">
+        <span class="material-symbols-outlined">dns</span>
+      </div>
+      <div>
+        <div class="stat-value">{{ record_count }}</div>
+        <div class="stat-label">Total Records</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 d-flex">
+    <div class="stat-card w-100">
+      <div class="stat-icon balance">
+        <span class="material-symbols-outlined">speed</span>
+      </div>
+      <div>
+        <div class="stat-value">{{ response_time }}ms</div>
+        <div class="stat-label">DB Response</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

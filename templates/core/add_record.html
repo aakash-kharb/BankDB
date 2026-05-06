@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Add Record — BankDB{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>
+    <span class="material-symbols-outlined">person_add</span> Add Customer Record
+  </h2>
+</div>
+
+<div class="card animate-in">
+  <div class="card-body p-4">
+    <form method="post">{% csrf_token %}
+      <div class="row g-3">
+        {% for field in form %}
+          <div class="col-md-6">
+            <label class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% for e in field.errors %}<div class="text-danger small mt-1">{{ e }}</div>{% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn btn-primary btn-lg">
+          <span class="material-symbols-outlined icon-sm">check_circle</span> Save
+        </button>
+        <a class="btn btn-outline-secondary btn-lg" href="{% url 'records_list' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

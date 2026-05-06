@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Passbook by Applicant — BankDB{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>
+    <span class="material-symbols-outlined">person_search</span> Passbook — By Applicant
+  </h2>
+</div>
+
+<form class="row g-2 mb-4" style="max-width:400px">
+  <div class="col">
+    <input class="form-control form-control-lg" name="applicant_no" placeholder="Enter applicant number" value="{{ applicant }}" />
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary btn-lg">
+      <span class="material-symbols-outlined icon-sm">search</span> Lookup
+    </button>
+  </div>
+</form>
+
+{% if row %}
+<div class="card">
+<div class="table-responsive" style="border-radius:var(--radius-lg)">
+<table class="table table-hover align-middle mb-0">
+  <thead>
+    <tr><th>Applicant</th><th>Name</th><th>IFSC</th><th class="text-end">Credit</th><th class="text-end">Debit</th><th class="text-end">Balance</th><th>City</th><th>Branch</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>{{ row.0 }}</td><td class="fw-semibold">{{ row.1 }}</td><td><code>{{ row.2 }}</code></td><td class="text-end">{{ row.3 }}</td><td class="text-end">{{ row.4 }}</td><td class="text-end">{{ row.5 }}</td><td>{{ row.6 }}</td><td><span class="badge text-bg-info">{{ row.7 }}</span></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+{% elif applicant %}
+<div class="alert alert-warning d-flex align-items-center gap-2">
+  <span class="material-symbols-outlined icon-fill">warning</span>
+  No record found for applicant {{ applicant }}.
+</div>
+{% endif %}
+
+{% endblock %}

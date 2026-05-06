@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}SQL Reference — BankDB{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>
+    <span class="material-symbols-outlined">database</span> SQL Queries
+  </h2>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">table_chart</span> Create Table</div>
+      <pre><code>CREATE TABLE IF NOT EXISTS customer_records (
+    applicant_no  INTEGER PRIMARY KEY,
+    name          VARCHAR(50),
+    ifsc          CHAR(11),
+    credit        FLOAT DEFAULT 0.0,
+    debit         FLOAT DEFAULT 0.0,
+    balance       FLOAT DEFAULT 0.0,
+    city          VARCHAR(50),
+    branch        INTEGER
+);</code></pre>
+    </div>
+  </div>
+
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">add_circle</span> Insert (Parameterized)</div>
+      <pre><code>INSERT INTO customer_records
+    (applicant_no, name, ifsc, credit,
+     debit, balance, city, branch)
+VALUES
+    (%s, %s, %s, %s, %s, %s, %s, %s);</code></pre>
+    </div>
+  </div>
+
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">list_alt</span> Select All</div>
+      <pre><code>SELECT *
+  FROM customer_records
+ ORDER BY applicant_no;</code></pre>
+    </div>
+  </div>
+
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">person_search</span> Select by Applicant</div>
+      <pre><code>SELECT *
+  FROM customer_records
+ WHERE applicant_no = %s;</code></pre>
+    </div>
+  </div>
+
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">edit</span> Update Fields</div>
+      <pre><code>UPDATE customer_records
+   SET name = %s,
+       city = %s,
+       branch = %s
+ WHERE applicant_no = %s;</code></pre>
+    </div>
+  </div>
+
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">delete</span> Delete Record</div>
+      <pre><code>DELETE FROM customer_records
+ WHERE applicant_no = %s;</code></pre>
+    </div>
+  </div>
+
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">account_tree</span> Branch Passbook</div>
+      <pre><code>SELECT *
+  FROM customer_records
+ WHERE branch = %s
+ ORDER BY applicant_no;</code></pre>
+    </div>
+  </div>
+
+  <div class="col-lg-6 d-flex">
+    <div class="sql-card w-100">
+      <div class="sql-title"><span class="material-symbols-outlined icon-sm">search</span> Search (LIKE)</div>
+      <pre><code>SELECT *
+  FROM customer_records
+ WHERE name LIKE %s
+    OR ifsc LIKE %s
+    OR city LIKE %s;</code></pre>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

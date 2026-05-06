@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block title %}Source Code — BankDB{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>
+    <span class="material-symbols-outlined">code</span> Source Code
+  </h2>
+</div>
+
+<div class="row g-3">
+  <!-- models.py -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        <div class="info-icon"><span class="material-symbols-outlined">data_object</span></div>
+        <h5>models.py</h5>
+      </div>
+      <pre><code>class CustomerRecord(models.Model):
+    applicant_no = models.IntegerField(
+        primary_key=True
+    )
+    name    = models.CharField(max_length=50)
+    ifsc    = models.CharField(max_length=11,
+                               db_index=True)
+    credit  = models.FloatField(default=0.0)
+    debit   = models.FloatField(default=0.0)
+    balance = models.FloatField(default=0.0)
+    city    = models.CharField(max_length=50)
+    branch  = models.IntegerField()
+
+    class Meta:
+        db_table = "customer_records"
+        ordering = ["applicant_no"]</code></pre>
+    </div>
+  </div>
+
+  <!-- forms.py -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        <div class="info-icon"><span class="material-symbols-outlined">edit_note</span></div>
+        <h5>forms.py</h5>
+      </div>
+      <pre><code>IFSC_REGEX = re.compile(
+    r"^[A-Za-z]{4}0[A-Za-z0-9]{6}$"
+)
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model  = CustomerRecord
+        fields = [
+            "applicant_no", "name", "ifsc",
+            "credit", "debit", "balance",
+            "city", "branch",
+        ]
+
+    def clean_ifsc(self):
+        code = self.cleaned_data["ifsc"]
+        code = code.upper().strip()
+        if not IFSC_REGEX.match(code):
+            raise ValidationError(
+                "Invalid IFSC format."
+            )
+        return code</code></pre>
+    </div>
+  </div>
+
+  <!-- views.py -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        <div class="info-icon"><span class="material-symbols-outlined">visibility</span></div>
+        <h5>views.py — Records List</h5>
+      </div>
+      <pre><code>def records_list(request):
+    q  = request.GET.get("q", "").strip()
+    qs = CustomerRecord.objects.all()
+
+    if q:
+        qs = qs.filter(
+            Q(name__icontains=q)
+          | Q(ifsc__icontains=q)
+          | Q(city__icontains=q)
+          | Q(applicant_no__icontains=q)
+        )
+
+    paginator = Paginator(qs, 12)
+    page_obj  = paginator.get_page(
+        request.GET.get("page")
+    )
+
+    return render(request,
+        "core/records_list.html",
+        {"page_obj": page_obj,
+         "q": q, "count": qs.count()}
+    )</code></pre>
+    </div>
+  </div>
+
+  <!-- views.py passbook -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        <div class="info-icon"><span class="material-symbols-outlined">menu_book</span></div>
+        <h5>views.py — Passbook</h5>
+      </div>
+      <pre><code>def passbook_branch(request):
+    branch = request.GET.get("branch")
+    with connection.cursor() as cur:
+        if branch:
+            cur.execute("""
+                SELECT applicant_no, name,
+                       ifsc, credit, debit,
+                       balance, city, branch
+                  FROM customer_records
+                 WHERE branch = %s
+            """, [branch])
+        else:
+            cur.execute("""
+                SELECT applicant_no, name,
+                       ifsc, credit, debit,
+                       balance, city, branch
+                  FROM customer_records
+            """)
+        rows = cur.fetchall()
+    return render(request, ...)</code></pre>
+    </div>
+  </div>
+
+  <!-- settings.py -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        <div class="info-icon"><span class="material-symbols-outlined">settings</span></div>
+        <h5>settings.py — Database Config</h5>
+      </div>
+      <pre><code>USE_DUMMY_DB = os.getenv(
+    "DUMMY_DATABASE", "false"
+).lower() == "true"
+
+if USE_DUMMY_DB:
+    DATABASES = {
+        "default": {
+            "ENGINE":
+              "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE":
+              "django.db.backends.mysql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
+        }
+    }</code></pre>
+    </div>
+  </div>
+
+  <!-- urls.py -->
+  <div class="col-lg-6 d-flex">
+    <div class="info-card w-100">
+      <div class="info-header">
+        <div class="info-icon"><span class="material-symbols-outlined">route</span></div>
+        <h5>urls.py — Route Definitions</h5>
+      </div>
+      <pre><code>urlpatterns = [
+    path("",         views.home),
+    path("records/", views.records_list),
+    path("records/add/",
+         views.add_record),
+    path("records/&lt;int:pk&gt;/edit/",
+         views.edit_record),
+    path("records/&lt;int:pk&gt;/delete/",
+         views.delete_record),
+    path("passbook/all/",
+         views.passbook_all),
+    path("passbook/branch/",
+         views.passbook_branch),
+    path("passbook/applicant/",
+         views.passbook_applicant),
+    path("sql/",    views.sql_queries),
+    path("source/", views.source_code),
+    path("health/", views.healthcheck),
+]</code></pre>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

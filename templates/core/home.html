@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}BankDB — Home{% endblock %}
+{% block content %}
+
+<!-- Hero -->
+<section class="hero-section animate-in">
+  <div class="row align-items-center g-4">
+    <div class="col-lg-7">
+      <h1>Bank Database Management</h1>
+      <p class="lead mb-3">A lightweight, production-informed demo for managing customer records and passbooks. Built as a learning project during an undergraduate Computer Science program, demonstrating Django's ORM, transactional integrity, and RESTful views.</p>
+      <div class="d-flex gap-2 flex-wrap">
+        <a href="/records/" class="btn btn-primary btn-lg">
+          <span class="material-symbols-outlined icon-sm">table_chart</span> View Records
+        </a>
+        <a href="/records/add/" class="btn btn-outline-primary btn-lg">
+          <span class="material-symbols-outlined icon-sm">add</span> Add Record
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="d-flex flex-column gap-2">
+        <a href="/passbook/all/" class="qa-card animate-in animate-in-delay-1">
+          <span class="material-symbols-outlined">menu_book</span>
+          <span class="qa-label">Passbook — All Customers</span>
+        </a>
+        <a href="/passbook/branch/" class="qa-card animate-in animate-in-delay-2">
+          <span class="material-symbols-outlined">account_tree</span>
+          <span class="qa-label">Passbook by Branch</span>
+        </a>
+        <a href="/passbook/applicant/" class="qa-card animate-in animate-in-delay-3">
+          <span class="material-symbols-outlined">person_search</span>
+          <span class="qa-label">Passbook by Applicant</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="mb-4">
+  <div class="row g-3">
+    <div class="col-md-4 d-flex animate-in animate-in-delay-1">
+      <div class="feature-card w-100">
+        <div class="feature-icon">
+          <span class="material-symbols-outlined">shield</span>
+        </div>
+        <h5>Data Integrity</h5>
+        <p>Transactional atomicity via Django's <code>transaction.atomic()</code> for ACID compliance on multi-row operations.</p>
+      </div>
+    </div>
+    <div class="col-md-4 d-flex animate-in animate-in-delay-2">
+      <div class="feature-card w-100">
+        <div class="feature-icon">
+          <span class="material-symbols-outlined">speed</span>
+        </div>
+        <h5>Indexing Strategy</h5>
+        <p>Selective B-tree indexes on frequently-filtered columns to reduce full-table scans and improve query latency.</p>
+      </div>
+    </div>
+    <div class="col-md-4 d-flex animate-in animate-in-delay-3">
+      <div class="feature-card w-100">
+        <div class="feature-icon">
+          <span class="material-symbols-outlined">history</span>
+        </div>
+        <h5>Schema Evolution</h5>
+        <p>Explicit migration files under <code>core/migrations/</code> keep the schema versioned and reproducible across environments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Overview & Developer Notes — equal height -->
+<section class="mb-4">
+  <div class="row g-3">
+    <div class="col-lg-8 d-flex">
+      <div class="info-card w-100">
+        <div class="info-header">
+          <div class="info-icon"><span class="material-symbols-outlined">info</span></div>
+          <h5>Overview</h5>
+        </div>
+        <div class="info-body">
+          <p>The application implements a normalized relational schema (<code>core.models.CustomerRecord</code>) focused on ACID-compliant transactions for single-request consistency. It uses Django's ORM for expressive query construction while allowing raw SQL when necessary for optimisation.</p>
+          <h6 class="fw-bold mt-3">Feature Summary</h6>
+          <ul>
+            <li>CRUD operations with server-side validation and CSRF protection.</li>
+            <li>Passbook generation endpoints with paginated transaction history.</li>
+            <li>Template-based UI for quick prototyping and accessible components.</li>
+          </ul>
+          <h6 class="fw-bold mt-3">Performance Metrics</h6>
+          <ul class="mb-0">
+            <li><strong>Latency (p95):</strong> aim for &lt; 200ms on local dev for simple queries.</li>
+            <li><strong>Throughput:</strong> use load tools (wrk, k6) to measure RPS.</li>
+            <li><strong>N+1 prevention:</strong> use <code>select_related</code> and <code>prefetch_related</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <aside class="col-lg-4 d-flex">
+      <div class="info-card w-100">
+        <div class="info-header">
+          <div class="info-icon"><span class="material-symbols-outlined">terminal</span></div>
+          <h5>Developer Notes</h5>
+        </div>
+        <div class="info-body">
+          <ul class="mb-3">
+            <li><strong>Env:</strong> <code>.env</code> is loaded by <code>python-dotenv</code> in settings.</li>
+            <li><strong>DB:</strong> Set <code>DUMMY_DATABASE=true</code> for local SQLite or <code>false</code> for MySQL.</li>
+            <li><strong>Migrations:</strong> <code>python3 manage.py makemigrations && migrate</code>.</li>
+            <li><strong>Dev server:</strong> <code>python3 manage.py runserver</code>.</li>
+          </ul>
+          <h6 class="fw-bold">Scaling Thoughts</h6>
+          <p class="mb-0">Add caching (Redis) for read-heavy endpoints, introduce connection pooling, and move long jobs to Celery workers for async processing at scale.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% endblock %}

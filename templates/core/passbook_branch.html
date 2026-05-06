@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Passbook by Branch — BankDB{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>
+    <span class="material-symbols-outlined">account_tree</span> Passbook — By Branch
+  </h2>
+</div>
+
+<form class="row g-2 mb-4" style="max-width:400px">
+  <div class="col">
+    <input class="form-control form-control-lg" name="branch" placeholder="Enter branch code" value="{{ branch }}" />
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary btn-lg">
+      <span class="material-symbols-outlined icon-sm">filter_alt</span> Filter
+    </button>
+  </div>
+</form>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon credit"><span class="material-symbols-outlined">trending_up</span></div>
+      <div><div class="stat-value">{{ totals.credit }}</div><div class="stat-label">Total Credit</div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon debit"><span class="material-symbols-outlined">trending_down</span></div>
+      <div><div class="stat-value">{{ totals.debit }}</div><div class="stat-label">Total Debit</div></div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <div class="stat-icon balance"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+      <div><div class="stat-value">{{ totals.balance }}</div><div class="stat-label">Total Balance</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+<div class="table-responsive" style="border-radius:var(--radius-lg)">
+<table class="table table-hover table-striped align-middle mb-0">
+  <thead>
+    <tr><th>Applicant</th><th>Name</th><th>IFSC</th><th class="text-end">Credit</th><th class="text-end">Debit</th><th class="text-end">Balance</th><th>City</th><th>Branch</th></tr>
+  </thead>
+  <tbody>
+  {% for r in rows %}
+    <tr>
+      <td>{{ r.0 }}</td><td class="fw-semibold">{{ r.1 }}</td><td><code>{{ r.2 }}</code></td><td class="text-end">{{ r.3 }}</td><td class="text-end">{{ r.4 }}</td><td class="text-end">{{ r.5 }}</td><td>{{ r.6 }}</td><td><span class="badge text-bg-info">{{ r.7 }}</span></td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="8" class="text-center py-4">
+      <span class="material-symbols-outlined" style="font-size:36px;color:var(--text-muted)">inbox</span>
+      <p class="text-muted mt-2 mb-0">No rows found.</p>
+    </td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+
+{% endblock %}

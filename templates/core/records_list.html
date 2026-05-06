@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Records — BankDB{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h2>
+    <span class="material-symbols-outlined">table_chart</span> All Records
+  </h2>
+  <a class="btn btn-primary" href="/records/add/">
+    <span class="material-symbols-outlined icon-sm">add</span> Add Record
+  </a>
+</div>
+
+<form class="row g-2 mb-3 searchbar">
+  <div class="col">
+    <div class="input-group">
+      <span class="input-group-text" style="background:transparent;border-right:0">
+        <span class="material-symbols-outlined icon-sm" style="color:var(--text-muted)">search</span>
+      </span>
+      <input class="form-control form-control-lg" name="q" style="border-left:0" placeholder="Search name, IFSC, city, applicant, or branch..." value="{{ q }}">
+    </div>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-primary btn-lg">Search</button>
+  </div>
+</form>
+
+<p class="text-muted mb-3" style="font-size:.88rem">
+  <span class="material-symbols-outlined icon-sm" style="vertical-align:middle">filter_list</span>
+  {{ count }} result{{ count|pluralize }}
+</p>
+
+<div class="card">
+<div class="table-responsive" style="border-radius:var(--radius-lg)">
+<table class="table table-hover table-striped align-middle mb-0">
+  <thead>
+    <tr>
+      <th>Applicant</th><th>Name</th><th>IFSC</th>
+      <th class="text-end">Credit</th><th class="text-end">Debit</th>
+      <th class="text-end">Balance</th><th>City</th><th>Branch</th><th style="width:120px"></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in page_obj %}
+    <tr>
+      <td><span class="badge bg-secondary badge-pill">{{ r.applicant_no }}</span></td>
+      <td class="fw-semibold">{{ r.name }}</td>
+      <td><code>{{ r.ifsc }}</code></td>
+      <td class="text-end">{{ r.credit }}</td>
+      <td class="text-end">{{ r.debit }}</td>
+      <td class="text-end">
+        <span class="badge {% if r.balance >= 0 %}bg-success{% else %}bg-danger{% endif %} badge-pill">{{ r.balance }}</span>
+      </td>
+      <td>{{ r.city }}</td>
+      <td><span class="badge text-bg-info">{{ r.branch }}</span></td>
+      <td class="text-nowrap">
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'edit_record' r.pk %}" title="Edit">
+          <span class="material-symbols-outlined icon-sm">edit</span>
+        </a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url 'delete_record' r.pk %}" title="Delete">
+          <span class="material-symbols-outlined icon-sm">delete</span>
+        </a>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="9" class="text-center py-5">
+        <div class="mx-auto" style="max-width:480px">
+          <span class="material-symbols-outlined" style="font-size:48px;color:var(--text-muted);display:block;margin-bottom:.75rem">inbox</span>
+          {% if q %}
+            <p class="h5 mb-2">No records match your search</p>
+            <p class="text-muted mb-3">No records matching "<strong>{{ q }}</strong>". Try a different query or add a new record.</p>
+          {% else %}
+            <p class="h5 mb-2">No records yet</p>
+            <p class="text-muted mb-3">There are currently no customer records in the database.</p>
+          {% endif %}
+          <div class="d-flex justify-content-center gap-2">
+            <a href="{% url 'add_record' %}" class="btn btn-primary">
+              <span class="material-symbols-outlined icon-sm">add</span> Add New Record
+            </a>
+            {% if q %}
+              <a href="{% url 'records_list' %}" class="btn btn-outline-secondary">Clear search</a>
+            {% endif %}
+          </div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+</div>
+
+<nav aria-label="Page" class="mt-3">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?q={{ q }}&page={{ page_obj.previous_page_number }}">
+        <span class="material-symbols-outlined icon-sm">chevron_left</span> Prev
+      </a></li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link"><span class="material-symbols-outlined icon-sm">chevron_left</span> Prev</span></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?q={{ q }}&page={{ page_obj.next_page_number }}">
+        Next <span class="material-symbols-outlined icon-sm">chevron_right</span>
+      </a></li>
+    {% else %}
+      <li class="page-item disabled"><span class="page-link">Next <span class="material-symbols-outlined icon-sm">chevron_right</span></span></li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}
