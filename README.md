@@ -1,6 +1,25 @@
-# BankDB — Django Bank Database Management
+# BankDB : Django Bank Database Management
 
 A lightweight, production-informed web application for managing customer banking records and passbooks. Built with **Django 5.x**, **Bootstrap 5**, and **Google Material Symbols**.
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Configuration](#configuration)
+  - [Run](#run)
+- [Database Modes](#database-modes)
+- [URL Routes](#url-routes)
+- [Model Schema](#model-schema)
+- [Design System](#design-system)
+- [Author](#author)
+- [License](#license)
 
 ---
 
@@ -15,62 +34,60 @@ A lightweight, production-informed web application for managing customer banking
 - **Dark Mode** — Toggle between light and dark themes with persistent localStorage preference
 - **Responsive Design** — Mobile-friendly layout with collapsible navigation
 
----
-
 ## Tech Stack
 
-| Layer      | Technology                        |
-|------------|-----------------------------------|
-| Backend    | Django 5.x (Python)               |
-| Database   | SQLite (local) / MySQL (Railway)  |
-| Frontend   | Bootstrap 5, Google Material Symbols |
-| Typography | Inter (Google Fonts)              |
-| Config     | python-dotenv                     |
+<div align="center">
 
----
+| Layer      | Technology                           |
+|:----------:|:------------------------------------:|
+| Backend    | Django 5.x (Python)                  |
+| Database   | SQLite (local) / MySQL (Railway)     |
+| Frontend   | Bootstrap 5, Google Material Symbols |
+| Typography | Inter (Google Fonts)                 |
+| Config     | python-dotenv                        |
+
+</div>
 
 ## Project Structure
 
 ```
 bankdb_django_ui/
-├── bankdb/                  # Django project configuration
-│   ├── settings.py          # Settings with DUMMY_DATABASE toggle
-│   ├── urls.py              # Root URL configuration
-│   ├── wsgi.py              # WSGI entry point
-│   └── asgi.py              # ASGI entry point
-├── core/                    # Main application
-│   ├── models.py            # CustomerRecord model
-│   ├── views.py             # All view functions (CRUD, passbook, health)
-│   ├── forms.py             # CustomerForm, CustomerUpdateForm (IFSC validation)
-│   ├── urls.py              # App URL patterns
-│   ├── admin.py             # Django admin registration
-│   └── migrations/          # Database migration files
+├── bankdb/                  <- Django project configuration
+│   ├── settings.py          <- Settings with DUMMY_DATABASE toggle
+│   ├── urls.py              <- Root URL configuration
+│   ├── wsgi.py              <- WSGI entry point
+│   └── asgi.py              <- ASGI entry point
+├── core/                    <- Main application
+│   ├── models.py            <- CustomerRecord model
+│   ├── views.py             <- All view functions (CRUD, passbook, health)
+│   ├── forms.py             <- CustomerForm, CustomerUpdateForm (IFSC validation)
+│   ├── urls.py              <- App URL patterns
+│   ├── admin.py             <- Django admin registration
+│   └── migrations/          <- Database migration files
 ├── templates/
-│   ├── base.html            # Base template (navbar, footer, Material Symbols)
-│   └── core/                # Page templates
-│       ├── home.html         # Landing page with hero and feature cards
-│       ├── records_list.html # Searchable, paginated records table
-│       ├── add_record.html   # Add new customer record form
-│       ├── edit_record.html  # Edit existing record form
-│       ├── delete_record.html# Delete confirmation
-│       ├── passbook_all.html # Full passbook with totals
-│       ├── passbook_branch.html  # Branch-filtered passbook
-│       ├── passbook_applicant.html # Single applicant lookup
-│       ├── sql_queries.html  # SQL reference cards
-│       ├── source_code.html  # Source code snippets
-│       └── health.html       # Health check dashboard
+│   ├── base.html            <- Base template (navbar, footer, Material Symbols)
+│   └── core/                <- Page templates
+│       ├── home.html         <- Landing page with hero and feature cards
+│       ├── records_list.html <- Searchable, paginated records table
+│       ├── add_record.html   <- Add new customer record form
+│       ├── edit_record.html  <- Edit existing record form
+│       ├── delete_record.html<- Delete confirmation
+│       ├── passbook_all.html <- Full passbook with totals
+│       ├── passbook_branch.html  <- Branch-filtered passbook
+│       ├── passbook_applicant.html <- Single applicant lookup
+│       ├── sql_queries.html  <- SQL reference cards
+│       ├── source_code.html  <- Source code snippets
+│       └── health.html       <- Health check dashboard
 ├── static/
-│   ├── css/theme.css         # Custom design system (light/dark mode)
-│   ├── js/ui.js              # Theme toggle, toasts, active nav
-│   └── img/                  # Favicon and logo assets
-├── .env                      # Environment variables (not committed)
-├── .gitignore                # Git ignore rules
-├── manage.py                 # Django management script
-├── requirements.txt          # Python dependencies
-└── LOGO.png                  # Original logo (1024x1024)
+│   ├── css/theme.css         <- Custom design system (light/dark mode)
+│   ├── js/ui.js              <- Theme toggle, toasts, active nav
+│   └── img/                  <- Favicon and logo assets
+├── .env                      <- Environment variables (not committed)
+├── .gitignore                <- Git ignore rules
+├── manage.py                 <- Django management script
+├── requirements.txt          <- Python dependencies
+└── LOGO.png                  <- Original logo (1024x1024)
 ```
-
----
 
 ## Getting Started
 
@@ -127,35 +144,37 @@ python3 manage.py runserver
 
 Visit **http://127.0.0.1:8000/** in your browser.
 
----
-
 ## Database Modes
 
-| Mode | `DUMMY_DATABASE` | Engine | Notes |
-|------|-------------------|--------|-------|
-| Local | `true` | SQLite | No external dependency, file-based |
-| Production | `false` | MySQL | Requires `DB_*` environment variables |
+<div align="center">
 
----
+| Mode       | `DUMMY_DATABASE` | Engine | Notes                                      |
+|:----------:|:----------------:|:------:|:------------------------------------------:|
+| Local      | `true`           | SQLite | No external dependency, file-based         |
+| Production | `false`          | MySQL  | Requires `DB_*` environment variables      |
+
+</div>
 
 ## URL Routes
 
-| Path | View | Description |
-|------|------|-------------|
-| `/` | `home` | Landing page |
-| `/records/` | `records_list` | Paginated record table with search |
-| `/records/add/` | `add_record` | Add new customer record |
-| `/records/<pk>/edit/` | `edit_record` | Edit existing record |
-| `/records/<pk>/delete/` | `delete_record` | Delete confirmation |
-| `/passbook/all/` | `passbook_all` | Full passbook with totals |
-| `/passbook/branch/` | `passbook_branch` | Filter by branch code |
-| `/passbook/applicant/` | `passbook_applicant` | Look up single applicant |
-| `/sql/` | `sql_queries` | SQL reference page |
-| `/source/` | `source_code` | Source code viewer |
-| `/health/` | `healthcheck` | Database health check |
-| `/admin/` | Django Admin | Admin interface |
+<div align="center">
 
----
+| Path                      | View                 | Description                          |
+|:-------------------------:|:--------------------:|:------------------------------------:|
+| `/`                       | `home`               | Landing page                         |
+| `/records/`               | `records_list`       | Paginated record table with search   |
+| `/records/add/`           | `add_record`         | Add new customer record              |
+| `/records/<pk>/edit/`     | `edit_record`        | Edit existing record                 |
+| `/records/<pk>/delete/`   | `delete_record`      | Delete confirmation                  |
+| `/passbook/all/`          | `passbook_all`       | Full passbook with totals            |
+| `/passbook/branch/`       | `passbook_branch`    | Filter by branch code                |
+| `/passbook/applicant/`    | `passbook_applicant` | Look up single applicant             |
+| `/sql/`                   | `sql_queries`        | SQL reference page                   |
+| `/source/`                | `source_code`        | Source code viewer                   |
+| `/health/`                | `healthcheck`        | Database health check                |
+| `/admin/`                 | Django Admin         | Admin interface                      |
+
+</div>
 
 ## Model Schema
 
@@ -175,8 +194,6 @@ class CustomerRecord(models.Model):
         ordering = ["applicant_no"]
 ```
 
----
-
 ## Design System
 
 - **CSS Custom Properties** for colors, shadows, radii, and transitions
@@ -185,13 +202,9 @@ class CustomerRecord(models.Model):
 - **Inter** font family throughout
 - **Component library**: stat-cards, feature-cards, info-cards, sql-cards, quick-action cards
 
----
-
 ## Author
 
 **Aakash Kharb**
-
----
 
 ## License
 
